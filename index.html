@@ -21,22 +21,25 @@
             font-family: "Gorditas", serif;
             font-weight: 400;
             font-style: normal;
-          font-size: calc(100vw / 5);
-          align-items: left;
-          justify-content: center;
+          font-size: clamp(60px, 20vw, 80px);      
           color: #fffdd0;
           text-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 1);
-          position: absolute;
-          top: 20%;
-          left: 40%;
-          transform: translate(-50%, -50%);
+        }
+        .location{
+            font-family: "Gorditas", serif;
+            font-weight: 400;
+            font-size: 10px;
+            font-style: normal;
+            font-size: clamp(10px, 20vw, 30px);
+
+            color: #fffdd0;
+            text-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 1);
         }
         .pan{
-            width: calc(100vw - 90px);
-            height: calc(100vh - 80px);
+            width: 100vw;
+            height: 100vh;
             position: absolute;
-            border-radius: 30px;
-            border: 1px solid rgb(0, 0, 0);
+            
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -135,23 +138,86 @@
        .air{
         font-family: "Concert One", sans-serif;
         font-weight: 400;
-        
+        color: #fffdd0;
+        align-items: center;
+        text-align: center;
+        padding-top: 15px;
+        padding-left: 10px;
         font-style: normal;
+        opacity: 0.6;
         font-size: 30px;
        }
        .midsec{
-        position: relative;
         display: flex;
-        left: 15%;
-        top: 250px;
+        flex-direction: column;
         text-align: left;
-        width: 300px;
-        height: 200px;
-        white-space: nowrap;
+        width: 100%;
+        padding-bottom: 20px;
         border-radius: 20px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         background-color: #afafaf41;
+       }
+       .cunt{
+        
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        gap: 15px;
+        width: 100%;
+        margin-top: 10px;
+        padding: 0 10px;
+        box-sizing: border-box
+       }
+       .blocks{
+
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        
+        font-family: "Concert One", sans-serif;
+        font-weight: 400;
+        color: #fffdd0;
+        font-style: normal;
+        font-size: 20px;
+        padding-top: 10px;
+        justify-content: center;
+        text-align: center;
+        width: 100px;
+        height: 90px;
+        border-radius: 20px;
+        opacity: 0.5;
+        border: 1px solid #fffdd0;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background-color: #afafaf41;
+       }
+       .locaicon{
+        display: inline-block;
+        background-image: url('./images/location.png');
+        background-size: cover;
+        width: 20px;
+        height: 20px;
+        
+        
+       }
+       .sidepan{
+        position: absolute;
+        top: 40%;
+        left: 80%;
+        
+       }
+       .idk{
+        position: absolute;
+        top: 10%; 
+        left: 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 45px;
+        width: 85%;
+        max-width: 450px;
+        z-index: 5;
        }
     </style>
 </head>
@@ -166,13 +232,21 @@
         <div class="rainy">
         </div>
     </div>
-
+    <div class="idk">
+    <div class="location"><span class="locaicon"></span>Indore, India</div>
     <div class="weather" id = "weather">28<span>°C</span>
     <div class="status">cloudy</div>
     </div>
     <div class="midsec">
-    <div class="air weather">Air Quality = 30ppm</div>
+    <div class="air">AQI-30</div>
+    <div class="cunt">
+    <div class="blocks">Running<br>-------<br>Good</div>
+    <div class="blocks" >Jogging<br>-------<br>Good</div>
+    <div class="blocks" >Cycling<br>-------<br>Good</div>
     </div>
+    </div>
+    </div>
+    <div class="sidepan">cloudy</div>
     <script>
         const apiurl = 'whttps://api.open-meteo.com/v1/forecast?latitude=22.7179&longitude=75.8333&daily=weather_code&hourly=temperature_2m,weather_code&current=temperature_2m,rain,is_day,weather_code&timezone=auto'
         const weathertxt = document.querySelector('.weather');
