@@ -7,7 +7,7 @@
     <style>
        
         @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@400;700&display=swap');
-
+          @import url('https://fonts.googleapis.com/css2?family=Concert+One&display=swap');
         .body { 
             font-family: "Gorditas", serif;
             font-weight: 400;
@@ -18,14 +18,17 @@
         }
 
         .weather{
-          font-size: calc(100vw / 7);
-          align-items: center;
+            font-family: "Gorditas", serif;
+            font-weight: 400;
+            font-style: normal;
+          font-size: calc(100vw / 5);
+          align-items: left;
           justify-content: center;
           color: #fffdd0;
           text-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 1);
           position: absolute;
-          top: 15%;
-          left: 50%;
+          top: 20%;
+          left: 40%;
           transform: translate(-50%, -50%);
         }
         .pan{
@@ -47,7 +50,7 @@
             overflow: hidden;
         }
         .moon{
-            display: none;
+            display:flex;
             opacity: 0.7;
             background-image: url('./images/moon2.png');
             background-size: cover;
@@ -94,11 +97,30 @@
             height: 250px;
             position: absolute;
             opacity: 0.7;
-            top: 13%;
+            top: 14%;
             z-index: -4;
             left: 80%;
             transform: translate(-50%, -50%);
         }
+        .gradient {
+            display: flex;
+    background: linear-gradient(311deg, #dc5f00, #f24d00, #f200008e);
+    background-size: 400% 100%;
+    
+    -webkit-animation: anim 50s ease infinite;
+    animation: anim 4s ease infinite;
+}
+
+@-webkit-keyframes anim {
+    0%{background-position:0% 11%}
+    50%{background-position:100% 90%}
+    100%{background-position:0% 11%}
+}
+@keyframes anim {
+    0%{background-position:0% 11%}
+    50%{background-position:100% 90%}
+    100%{background-position:0% 11%}
+}
         @keyframes rotate{
             0%{
                 transform: translate(-50%, -50%) rotate(0deg);
@@ -107,10 +129,33 @@
                 transform: translate(-50%, -50%) rotate(360deg);
             }
         }
-       
+       .status{
+        font-size: calc(100vw / 20);
+       }
+       .air{
+        font-family: "Concert One", sans-serif;
+        font-weight: 400;
+        
+        font-style: normal;
+        font-size: 30px;
+       }
+       .midsec{
+        position: relative;
+        display: flex;
+        left: 15%;
+        top: 250px;
+        text-align: left;
+        width: 300px;
+        height: 200px;
+        white-space: nowrap;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background-color: #afafaf41;
+       }
     </style>
 </head>
-<body class="body">
+<body class="gradient">
     <div class = "pan">
        <div class="sun">
         </div>
@@ -122,11 +167,50 @@
         </div>
     </div>
 
-    <div class="weather">
-        Weather
+    <div class="weather" id = "weather">28<span>°C</span>
+    <div class="status">cloudy</div>
+    </div>
+    <div class="midsec">
+    <div class="air weather">Air Quality = 30ppm</div>
     </div>
     <script>
-        
+        const apiurl = 'whttps://api.open-meteo.com/v1/forecast?latitude=22.7179&longitude=75.8333&daily=weather_code&hourly=temperature_2m,weather_code&current=temperature_2m,rain,is_day,weather_code&timezone=auto'
+        const weathertxt = document.querySelector('.weather');
+        const sun = document.querySelector('.sun');
+        const cloudy = document.querySelector('.cloudy')
+        const rainy = document.querySelector('.rainy');
+        const moon = document.querySelector('.moon')
+        const gradient = document.querySelector('.gradient')
+        async function update(){
+          const responce = await fetch(apiurl);
+          const data = await responce.json();
+          const day = data.current.is_day;
+          const codes = data.current.weather_code;
+          const temp = data.current.temperature_2m;
+          const rain = (codes >= 51 && codes <= 67)
+          if(rain){
+            rainy.style.display = 'block';
+            sun.style.display = 'none';
+            cloudy.style.display = 'none';
+            moon.style.display = 'none';
+            gradient.style.backgroundImage = 'linear-gradient(311deg, #dc5f00, #f24d00, #f200008e)';
+          }else if(day == 1){
+            sun.style.display = 'block';
+            cloudy.style.display = 'none';
+            rainy.style.display = 'none';
+            moon.style.display = 'none';
+          }else if(day == 0){
+            gradient.style.backgroundImage = 'linear-gradient(37deg, #2e2da9, #06c2d2, #d2b806)'
+            sun.style.display = 'none';
+            cloudy.style.display = 'none';
+            rainy.style.display = 'none';
+            moon.style.display = 'block';
+          }
+          weathertxt.innerHTML = `${temp}<span>°C</span>`;
+          setTimeout(update, 9000000);
+
+        }
+        update()
     </script>
 </body>
 </html>
