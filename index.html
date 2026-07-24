@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sick animated weather shi</title>
+    <style>
+       
+        @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@400;700&display=swap');
+
+        .body { 
+            font-family: "Gorditas", serif;
+            font-weight: 400;
+            font-style: normal;
+            overflow: hidden;
+            color: rgb(19, 18, 18);
+            background-color: orangered;
+        }
+        .weather{
+          font-size: 60px;
+          align-items: center;
+          justify-content: center;
+          
+          position: absolute;
+          top: 10%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .pan{
+            width: calc(100vw - 90px);
+            height: calc(100vh - 80px);
+            position: absolute;
+            border-radius: 30px;
+            border: 1px solid rgb(0, 0, 0);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(131, 131, 131);
+            opacity: 0.3;
+            box-shadow: 0px 0px 15px 12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: -1;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="body">
+    <div class = "pan">
+
+    </div>
+    <div class="weather">
+        Weather
+    </div>
+
+    
+
+    <script>
+        
+    </script>
+</body>
+</html>
