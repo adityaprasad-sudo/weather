@@ -16,13 +16,15 @@
             color: rgb(19, 18, 18);
             background-color: orangered;
         }
+
         .weather{
-          font-size: 60px;
+          font-size: calc(100vw / 7);
           align-items: center;
           justify-content: center;
-          
+          color: #fffdd0;
+          text-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 1);
           position: absolute;
-          top: 10%;
+          top: 15%;
           left: 50%;
           transform: translate(-50%, -50%);
         }
@@ -35,28 +37,94 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgb(131, 131, 131);
-            opacity: 0.3;
+            background-color: rgb(131, 131, 131, 0.4);
             box-shadow: 0px 0px 15px 12px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             z-index: -1;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            z-index: -1;
+            overflow: hidden;
         }
+        .moon{
+            display: none;
+            opacity: 0.7;
+            background-image: url('./images/moon2.png');
+            background-size: cover;
+            width: 250px;
+            height: 250px;
+            position:absolute;
+            top: 7%;
+            z-index: -4;
+            left: 90%;
+            transform: translate(-50%, -50%);
+            animation: rotate 10s linear infinite;
+        }
+        .sun{
+            display: none;
+            background-image: url('./images/sun.png');
+            background-size: cover;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            top: 5%;
+            z-index: -4;
+            left: 90%;
+            transform: translate(-50%, -50%);
+            animation: rotate 10s linear infinite;
+        }
+        .cloudy{
+            display: none;
+            background-image: url('./images/cloudy.png');
+            background-size: cover;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            top: 10%;
+            opacity: 0.7;
+            z-index: -4;
+            left: 80%;
+            transform: translate(-50%, -50%);
+        }
+        .rainy{
+            display: none;
+            background-image: url('./images/rain.gif');
+            background-size: cover;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            opacity: 0.7;
+            top: 13%;
+            z-index: -4;
+            left: 80%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes rotate{
+            0%{
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100%{
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+       
     </style>
 </head>
 <body class="body">
     <div class = "pan">
-
+       <div class="sun">
+        </div>
+        <div class="moon">
+        </div>
+        <div class="cloudy">
+        </div>
+        <div class="rainy">
+        </div>
     </div>
+
     <div class="weather">
         Weather
     </div>
-
-    
-
     <script>
         
     </script>
