@@ -172,7 +172,7 @@
        .blocks{
 
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         flex: 1;
         
         font-family: "Concert One", sans-serif;
@@ -220,9 +220,38 @@
         max-width: 450px;
         z-index: 5;
        }
+       .searchbox {
+        position: absolute;
+        top: 20px;
+        left: 8%;
+        z-index: 10;
+        display: flex;
+        gap: 10px;
+       }
+       #locainput {
+        font-family: "Gorditas", serif;
+        padding: 5px 15px;
+        border-radius: 15px;
+        border: 2px solid #333;
+        background-color: rgba(255, 255, 255, 0.7);
+        outline: none;
+       }
+       #seebtn {
+        font-family: "Gorditas", serif;
+        padding: 5px 15px;
+        border-radius: 15px;
+        border: 2px solid #333;
+        background-color: #333;
+        color: white;
+        cursor: pointer;
+       }
     </style>
 </head>
 <body class="gradient">
+    <div class="searchbox">
+        <input type="text" id="locainput" placeholder="Enter city...">
+        <button id="seebtn">Search</button>
+    </div>
     <div class = "pan">
        <div class="sun">
         </div>
@@ -233,33 +262,34 @@
         <div class="rainy">
         </div>
     </div>
+    <div textarea ></div>
     <div class="idk">
-    <div class="location"><span class="locaicon"></span>Indore, India</div>
-    <div class="weather" id = "weather">28<span>°C</span>
-    <div class="status">cloudy</div>
+    <div class="location"><span class="locaicon"></span><span id="locatxt">Indore, India</span></div>
+    <div class="weather"><span id="weathertxt"></span><span>°C</span>
+    <div class="status" id="stat"></div>
     </div>
     <div class="midsec">
-    <div class="air">AQI-30</div>
+    <div class="air" id="aqitxt">AQI</div>
     <div class="cunt">
-    <div class="blocks">Running<br>-------<br>Good</div>
-    <div class="blocks" >Jogging<br>-------<br>Good</div>
-    <div class="blocks" >Cycling<br>-------<br>Good</div>
+    <div class="blocks">Running<br>-------<br><span class="activity"></span></div>
+    <div class="blocks" >Jogging<br>-------<br><span class="activity"></span></div>
+    <div class="blocks" >Cycling<br>-------<br><span class="activity"></span></div>
     </div>
     
     </div>
     <div style="display: flex; gap: 15px; width: 100%; margin-top: 15px;">
         
-        <div class="blocks" style=" font-size: 16px;height: auto; flex: 1;">
-        <br>Weather TMR<br>-------<br><br>Some sun, then cloudy
+        <div class="blocks" id=tmrweather style=" font-size: 16px;height: auto; flex: 1;">
+        <br>Weather TMR<br>-------<br><br>
         </div>
         <div style="display: flex; flex-direction: column; gap: 15px; flex: 2;">
         <div class="cunt" style="margin: 0; padding: 0;">
-            <div class="blocks">Humidity<br>-------<br>99%</div>
-        <div class="blocks">Winds<br>-------<br>13m/s  SSW</div>
+            <div class="blocks" id="humi">Humidity<br>-------<br>%</div>
+        <div class="blocks" id="wind"    >Winds<br>-------<br>m/s</div>
             </div>
         <div class="cunt" style="margin: 0; padding: 0;">
-            <div class="blocks">UV index<br>-----<br>low</div>
-            <div class="blocks" ><span style="font-size: 19px;">Precipitation<br>-------<br>0mm</div>
+            <div class="blocks" id="uv" > UV index<br>-----<br>low</div>
+            <div class="blocks" id="precip"><span style="font-size: 19px;">Precipitation<br>-------<br>mm</div>
             </div>
         </div>
     </div>
@@ -268,43 +298,137 @@
     </div>
     <div class="sidepan">cloudy</div>
     <script>
-        const apiurl = 'whttps://api.open-meteo.com/v1/forecast?latitude=22.7179&longitude=75.8333&daily=weather_code&hourly=temperature_2m,weather_code&current=temperature_2m,rain,is_day,weather_code&timezone=auto'
+        let lat = 22.7179;
+        let longi = 75.8333;
+        let cityname = 'Indore, India';
+        
         const weathertxt = document.querySelector('.weather');
         const sun = document.querySelector('.sun');
-        const cloudy = document.querySelector('.cloudy')
+        const cloudy = document.querySelector('.cloudy');
         const rainy = document.querySelector('.rainy');
-        const moon = document.querySelector('.moon')
-        const gradient = document.querySelector('.gradient')
-        async function update(){
-          const responce = await fetch(apiurl);
-          const data = await responce.json();
-          const day = data.current.is_day;
-          const codes = data.current.weather_code;
-          const temp = data.current.temperature_2m;
-          const rain = (codes >= 51 && codes <= 67)
-          if(rain){
-            rainy.style.display = 'block';
-            sun.style.display = 'none';
-            cloudy.style.display = 'none';
-            moon.style.display = 'none';
-            gradient.style.backgroundImage = 'linear-gradient(311deg, #dc5f00, #f24d00, #f200008e)';
-          }else if(day == 1){
-            sun.style.display = 'block';
-            cloudy.style.display = 'none';
-            rainy.style.display = 'none';
-            moon.style.display = 'none';
-          }else if(day == 0){
-            gradient.style.backgroundImage = 'linear-gradient(37deg, #2e2da9, #06c2d2, #d2b806)'
-            sun.style.display = 'none';
-            cloudy.style.display = 'none';
-            rainy.style.display = 'none';
-            moon.style.display = 'block';
-          }
-          weathertxt.innerHTML = `${temp}<span>°C</span>`;
-          setTimeout(update, 9000000);
+        const moon = document.querySelector('.moon');
+        const gradient = document.querySelector('.gradient');
 
+        function chigga(code){
+            if(code == 0) return "Clear Sky";
+            if (code == 1 || code == 2 || code == 3) return "Cloudy";
+            if (code == 45 || code == 48) return "Fog";
+            if (code >= 51 && code <= 67) return "Rain";
+            if (code >= 71 && code <= 77) return "Snow";
+            if (code >= 80 && code <= 82) return "Rain showers";
+            if (code >= 95) return "Thunderstorm";
+            return "Idk";
         }
-        update()
+
+        async function update(){
+            try {
+                let weatheurl = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + longi + "&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day&daily=weather_code,uv_index_max&timezone=auto";
+                let aqiurl ="https://air-quality-api.open-meteo.com/v1/air-quality?latitude=" + lat + "&longitude=" + longi + "&current=european_aqi";
+                
+                const responce1 = await fetch(aqiurl);
+                const aqiData = await responce1.json();
+                
+                const re2 = await fetch(weatheurl);
+                const weatherData = await re2.json();
+
+                if (weatherData.error) {
+                    console.log("API Error: " + weatherData.reason);
+                    return;
+                }
+
+                const day = weatherData.current?.is_day;
+                const codes = weatherData.current?.weather_code;
+                const temp = Math.round(weatherData.current?.temperature_2m || 0);
+                const rain = (codes >= 51 && codes <= 67) || (codes >= 80 && codes <= 82);
+                
+                let actstat = "Good";
+                let aqi = "N/A";
+                
+                if (aqiData.current?.european_aqi) {
+                    aqi = aqiData.current.european_aqi;
+                }
+                
+                if(aqi > 50) actstat = "Bad";
+                if(aqi > 100) actstat = "Very Bad";
+                if(aqi > 150) actstat = "Hazardous";
+                if(aqi === "N/A") actstat = "-";
+
+                if(rain){
+                    rainy.style.display = 'block';
+                    sun.style.display = 'none';
+                    cloudy.style.display = 'none';
+                    moon.style.display = 'none';
+                    gradient.style.backgroundImage = 'linear-gradient(311deg, #dc5f00, #f24d00, #f200008e)';
+                } else if(day == 1){
+                    sun.style.display = 'block';
+                    cloudy.style.display = 'none';
+                    rainy.style.display = 'none';
+                    moon.style.display = 'none';
+                } else if(day == 0){
+                    gradient.style.backgroundImage = 'linear-gradient(37deg, #2e2da9, #06c2d2, #d2b806)';
+                    sun.style.display = 'none';
+                    cloudy.style.display = 'none';
+                    rainy.style.display = 'none';
+                    moon.style.display = 'block';
+                }
+
+                document.getElementById('locatxt').innerHTML = cityname;
+                document.getElementById('weathertxt').innerHTML = temp;
+                document.getElementById('stat').innerHTML = codes !== undefined ? chigga(codes) : "Idk"; 
+                document.getElementById('aqitxt').innerHTML = "AQI - " + aqi;
+                
+                let activities = document.getElementsByClassName('activity');
+                for(let i = 0; i < activities.length; i++) {
+                    activities[i].innerHTML = actstat;
+                }
+                
+                document.getElementById('humi').innerHTML = "Humidity<br>-------<br>" + (weatherData.current?.relative_humidity_2m ?? "--") + "%";
+                document.getElementById('wind').innerHTML = "Winds<br>-------<br>" + Math.round(weatherData.current?.wind_speed_10m ?? 0) + " m/s";
+                
+                let uvValue = weatherData.daily?.uv_index_max?.[0] ?? "--";
+                document.getElementById('uv').innerHTML = "UV index<br>-----<br>" + (uvValue !== "--" ? Math.round(uvValue) : uvValue);
+                
+                document.getElementById('precip').innerHTML = "<span style='font-size: 19px;'>Precipitation<br>-------<br>" + (weatherData.current?.precipitation ?? "--") + "mm</span>";
+                    
+                let tmrCode = weatherData.daily?.weather_code?.[1];
+                let tmrText = tmrCode !== undefined ? chigga(tmrCode) : "--";
+                document.getElementById('tmrweather').innerHTML = "<br>Weather TMR<br>-------<br><br>" + tmrText;
+            } catch (e) {
+                console.log("Fetch failed: ", e);
+            }
+            clearTimeout(window.timothy);
+            window.timothy = setTimeout(update, 900000);
+        }
+        async function searchCity() {
+            let input = document.getElementById('locainput').value;
+            if (input == "") return;
+            let searchApi = "https://geocoding-api.open-meteo.com/v1/search?name=" + input + "&count=1&language=en&format=json";
+            try {
+                let res = await fetch(searchApi);
+                let locData = await res.json();
+                if (locData.results && locData.results.length > 0) {
+                    lat = locData.results[0].latitude;
+                    longi = locData.results[0].longitude;
+                    if (locData.results[0].country) {
+                        cityname = locData.results[0].name + ", " + locData.results[0].country;
+                    } else {
+                        cityname = locData.results[0].name;
+                    }
+                    update(); 
+                } else {
+                    alert("City not found!");
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        }
+        document.getElementById('seebtn').addEventListener('click', searchCity);
+        document.getElementById('locainput').addEventListener('keypress', function(e) {
+            if (e.key === "Enter") {
+                searchCity();
+            }
+        });
+        update();
     </script>
 </body>
 </html>
